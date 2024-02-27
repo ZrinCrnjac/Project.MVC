@@ -103,8 +103,7 @@ namespace Project.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        // GET: VehicleMakeController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
             var make = await vehicleService.GetVehicleMakeByIdAsync(id);
