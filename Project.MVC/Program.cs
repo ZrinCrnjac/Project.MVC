@@ -1,7 +1,30 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Project.Service.Database;
+using Project.Service.Services;
+using Project.Service.AutoMapper;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+// Autofac DI
+builder.Host
+    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .ConfigureContainer<ContainerBuilder>((container) =>
+    {
+        var contextOptionsBuilder = new DbContextOptionsBuilder<VehicleDatabase>();
+        contextOptionsBuilder.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings:DefaultConnection").Value);
+        container.RegisterType<VehicleDatabase>().WithParameter("options",contextOptionsBuilder.Options).AsSelf().InstancePerLifetimeScope();
+        container.RegisterType<VehicleService>().As<IVehicleService>().InstancePerLifetimeScope();
+    });
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Configure AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
@@ -15,7 +38,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.UseAuthorization();
