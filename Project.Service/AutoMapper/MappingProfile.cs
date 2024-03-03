@@ -13,10 +13,12 @@ namespace Project.Service.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<VehicleMake, VehicleMakeViewModel>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Abrv, opt => opt.MapFrom(src => src.Abrv))
+            CreateMap<VehicleMake, VehicleMakeViewModel>().ReverseMap();
+
+            CreateMap<VehicleMake, VehicleMakeCreateViewModel>().ReverseMap();
+
+            CreateMap<VehicleModel, VehicleModelViewModel>()
+                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.VehicleMake.Name))
                 .ReverseMap();
         }
     }

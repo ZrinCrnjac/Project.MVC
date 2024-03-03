@@ -43,17 +43,17 @@ namespace Project.MVC.Controllers
         // POST: VehicleMakeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(VehicleMakeViewModel vehicleMakeViewModel)
+        public async Task<ActionResult> Create(VehicleMakeCreateViewModel vehicleMakeCreateViewModel)
         {
-            if(!ModelState.IsValid)
+            if(ModelState.IsValid)
             {
-                return View(vehicleMakeViewModel);
+                return View(vehicleMakeCreateViewModel);
             }
 
-            var make = new VehicleMakeViewModel
+            var make = new VehicleMakeCreateViewModel
             {
-                Name = vehicleMakeViewModel.Name,
-                Abrv = vehicleMakeViewModel.Abrv
+                Name = vehicleMakeCreateViewModel.Name,
+                Abrv = vehicleMakeCreateViewModel.Abrv
             };
 
             await vehicleService.CreateVehicleMakeAsync(make);

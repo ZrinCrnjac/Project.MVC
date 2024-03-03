@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Project.Service.ViewModels.VehicleMakeViewModel>
+﻿@model IEnumerable<Project.Service.ViewModels.VehicleModelViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -21,7 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Abrv)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.MakeName)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +37,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Abrv)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MakeName)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |

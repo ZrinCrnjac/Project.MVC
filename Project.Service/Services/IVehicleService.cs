@@ -12,8 +12,9 @@ namespace Project.Service.Services
     {
         Task<List<VehicleMakeViewModel>> GetVehiclesAsync();
         Task<VehicleMakeViewModel> GetVehicleMakeByIdAsync(int id);
-        Task CreateVehicleMakeAsync(VehicleMakeViewModel vehicleMakeViewModel);
+        Task CreateVehicleMakeAsync(VehicleMakeCreateViewModel vehicleCreateMakeViewModel);
         Task UpdateVehicleMakeAsync(VehicleMakeViewModel vehicleMakeViewModel);
         Task DeleteVehicleMakeAsync(int id);
+        Task<List<VehicleModelViewModel>> GetVehicleModelsAsync();
     }
 }

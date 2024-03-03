@@ -29,9 +29,9 @@ namespace Project.Service.Services
             return vehicleMakeViewModels;
         }
 
-        public async Task CreateVehicleMakeAsync(VehicleMakeViewModel vehicleMakeViewModel)
+        public async Task CreateVehicleMakeAsync(VehicleMakeCreateViewModel vehicleMakeCreateViewModel)
         {
-            var vehicleMake = this.mapper.Map<VehicleMake>(vehicleMakeViewModel);
+            var vehicleMake = this.mapper.Map<VehicleMake>(vehicleMakeCreateViewModel);
             this.context.VehicleMakes.Add(vehicleMake);
             await this.context.SaveChangesAsync();
         }
@@ -55,6 +55,13 @@ namespace Project.Service.Services
             var vehicleMake = await this.context.VehicleMakes.FindAsync(id);
             this.context.VehicleMakes.Remove(vehicleMake);
             await this.context.SaveChangesAsync();
+        }
+
+        public async Task<List<VehicleModelViewModel>> GetVehicleModelsAsync()
+        {
+            var vehicleModels = await this.context.VehicleModels.Include(v => v.VehicleMake).ToListAsync();
+            var vehicleModelViewModels = this.mapper.Map<List<VehicleModelViewModel>>(vehicleModels);
+            return vehicleModelViewModels;
         }
     }
 }
