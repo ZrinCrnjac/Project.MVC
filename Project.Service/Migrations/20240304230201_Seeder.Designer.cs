@@ -11,8 +11,8 @@ using Project.Service.Database;
 namespace Project.Service.Migrations
 {
     [DbContext(typeof(VehicleDatabase))]
-    [Migration("20240227000246_VehicleMigration")]
-    partial class VehicleMigration
+    [Migration("20240304230201_Seeder")]
+    partial class Seeder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

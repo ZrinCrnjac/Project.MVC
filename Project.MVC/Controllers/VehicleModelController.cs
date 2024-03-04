@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Project.Service.Database.Models;
 using Project.Service.Services;
+using Project.Service.ViewModels;
 
 namespace Project.MVC.Controllers
 {
@@ -21,36 +24,70 @@ namespace Project.MVC.Controllers
         }
 
         // GET: VehicleModelController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var model = await vehicleService.GetVehicleModelByIdAsync(id);
+
+            if (model == null)
+            {
+                //napraviti view za notfound u shared
+                return NotFound();
+            }
+
+            return View(model);
         }
 
         // GET: VehicleModelController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            var makes = await vehicleService.GetVehiclesAsync();
+
+            var makeList = new SelectList(makes, "Id", "Name");
+
+            ViewBag.MakeList = makeList;
+
             return View();
         }
 
         // POST: VehicleModelController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(VehicleModelCreateViewModel vehicleModelCreateViewModel)
         {
-            try
+
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                var makes = await vehicleService.GetVehiclesAsync();
+
+                var makeList = new SelectList(makes, "Id", "Name");
+
+                ViewBag.MakeList = makeList;
+
+                return View(vehicleModelCreateViewModel);
             }
-            catch
-            {
-                return View();
-            }
+
+            var modelId = await vehicleService.CreateVehicleModelAsync(vehicleModelCreateViewModel);
+
+            return RedirectToAction(nameof(Details), new { id = modelId });
         }
 
         // GET: VehicleModelController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var model = await vehicleService.GetVehicleModelByIdAsync(id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            var makes = await vehicleService.GetVehiclesAsync();
+
+            var makeList = new SelectList(makes, "Id", "Name");
+
+            ViewBag.MakeList = makeList;
+
+            return View(model);
         }
 
         // POST: VehicleModelController/Edit/5
@@ -69,24 +106,16 @@ namespace Project.MVC.Controllers
         }
 
         // GET: VehicleModelController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
-        }
+            var success = await vehicleService.DeleteVehicleModelAsync(id);
 
-        // POST: VehicleModelController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            if (!success)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

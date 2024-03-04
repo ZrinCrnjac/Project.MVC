@@ -7,14 +7,17 @@ using System.Threading.Tasks;
 
 namespace Project.Service.ViewModels
 {
-    public class VehicleMakeCreateViewModel
+    public class VehicleModelCreateViewModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         [Required]
         [StringLength(20)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
         [Required]
         [StringLength(10)]
-        public string Abrv { get; set; }
+        public required string Abrv { get; set; }
+        [Required]
+        //error message in Required
+        public int MakeId { get; set; }
     }
 }

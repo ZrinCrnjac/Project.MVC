@@ -20,6 +20,8 @@ namespace Project.Service.AutoMapper
             CreateMap<VehicleModel, VehicleModelViewModel>()
                 .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.VehicleMake.Name))
                 .ReverseMap();
+
+            CreateMap<VehicleModel, VehicleModelCreateViewModel>().ReverseMap();
         }
     }
 }
