@@ -93,11 +93,12 @@ namespace Project.Service.Services
             return true;
         }
 
-        public async Task UpdateVehicleModelAsync(VehicleModelCreateViewModel vehicleModelCreateViewModel)
+        public async Task<int> UpdateVehicleModelAsync(VehicleModelCreateViewModel vehicleModelCreateViewModel)
         {
             var vehicleModel = this.mapper.Map<VehicleModel>(vehicleModelCreateViewModel);
             this.context.VehicleModels.Update(vehicleModel);
             await this.context.SaveChangesAsync();
+            return vehicleModel.Id;
         }
     }
 }

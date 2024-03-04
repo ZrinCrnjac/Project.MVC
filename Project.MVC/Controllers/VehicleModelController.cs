@@ -93,16 +93,22 @@ namespace Project.MVC.Controllers
         // POST: VehicleModelController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(VehicleModelCreateViewModel vehicleModelCreateViewModel)
         {
-            try
+            if(!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                var makes = await vehicleService.GetVehiclesAsync();
+
+                var makeList = new SelectList(makes, "Id", "Name");
+
+                ViewBag.MakeList = makeList;
+
+                return View(vehicleModelCreateViewModel);
             }
-            catch
-            {
-                return View();
-            }
+
+            var modelId = await vehicleService.UpdateVehicleModelAsync(vehicleModelCreateViewModel);
+
+            return RedirectToAction(nameof(Details), new { id = vehicleModelCreateViewModel.Id });
         }
 
         // GET: VehicleModelController/Delete/5

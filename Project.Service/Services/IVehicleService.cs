@@ -19,6 +19,6 @@ namespace Project.Service.Services
         Task<VehicleModelViewModel> GetVehicleModelByIdAsync(int id);
         Task<int> CreateVehicleModelAsync(VehicleModelCreateViewModel vehicleModelCreateViewModel);
         Task<bool> DeleteVehicleModelAsync(int id);
-        Task UpdateVehicleModelAsync(VehicleModelCreateViewModel vehicleModelCreateViewModel);
+        Task<int> UpdateVehicleModelAsync(VehicleModelCreateViewModel vehicleModelCreateViewModel);
     }
 }
