@@ -15,9 +15,32 @@ namespace Project.MVC.Controllers
             this.vehicleService = vehicleService;
         }
         // GET: VehicleMakeController
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string sortOrder)
         {
-            var makes = await vehicleService.GetVehiclesAsync();
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.AbrvSortParm = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
+
+            var makes = from m in await vehicleService.GetVehiclesAsync()
+                        select m;
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    makes = makes.OrderByDescending(m => m.Name);
+                    break;
+                case "name_asc":
+                    makes = makes.OrderBy(m => m.Name);
+                    break;
+                case "abrv_desc":
+                    makes = makes.OrderByDescending(m => m.Abrv);
+                    break;
+                case "abrv_asc":
+                    makes = makes.OrderBy(m => m.Abrv);
+                    break;
+                default:
+                    makes = makes.OrderBy(m => m.Name);
+                    break;
+            }
             return View(makes);
         }
 
