@@ -15,13 +15,19 @@ namespace Project.MVC.Controllers
             this.vehicleService = vehicleService;
         }
         // GET: VehicleMakeController
-        public async Task<ActionResult> Index(string sortOrder)
+        public async Task<ActionResult> Index(string sortOrder, string searchString)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.AbrvSortParm = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
 
             var makes = from m in await vehicleService.GetVehiclesAsync()
                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                makes = makes.Where(m => m.Name.Contains(searchString)
+                                    || m.Abrv.Contains(searchString));
+            }
 
             switch (sortOrder)
             {

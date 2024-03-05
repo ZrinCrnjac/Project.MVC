@@ -17,7 +17,7 @@ namespace Project.MVC.Controllers
         }
 
         // GET: VehicleModelController
-        public async Task<ActionResult> Index(string sortOrder)
+        public async Task<ActionResult> Index(string sortOrder, string searchString)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.AbrvSortParm = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
@@ -26,24 +26,31 @@ namespace Project.MVC.Controllers
             var models = from m in await vehicleService.GetVehicleModelsAsync()
                          select m;
 
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                models = models.Where(m => m.Name.Contains(searchString)
+                                      || m.Abrv.Contains(searchString)
+                                      || m.MakeName.Contains(searchString));
+            }
+
             switch (sortOrder)
             {
-                case("name_desc"):
+                case ("name_desc"):
                     models = models.OrderByDescending(m => m.Name);
                     break;
-                case("name_asc"):
+                case ("name_asc"):
                     models = models.OrderBy(m => m.Name);
                     break;
-                case("abrv_desc"):
+                case ("abrv_desc"):
                     models = models.OrderByDescending(m => m.Abrv);
                     break;
-                case("abrv_asc"):
+                case ("abrv_asc"):
                     models = models.OrderBy(m => m.Abrv);
                     break;
-                case("makeName_desc"):
+                case ("makeName_desc"):
                     models = models.OrderByDescending(m => m.MakeName);
                     break;
-                case("makeName_asc"):
+                case ("makeName_asc"):
                     models = models.OrderBy(m => m.MakeName);
                     break;
                 default:
@@ -126,7 +133,7 @@ namespace Project.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(VehicleModelCreateViewModel vehicleModelCreateViewModel)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var makes = await vehicleService.GetVehiclesAsync();
 
