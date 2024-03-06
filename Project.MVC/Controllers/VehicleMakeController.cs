@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Project.Service.ViewModels;
 using Project.Service.Services;
+using Project.Service.Database.Models;
 
 
 namespace Project.MVC.Controllers
@@ -15,38 +16,15 @@ namespace Project.MVC.Controllers
             this.vehicleService = vehicleService;
         }
         // GET: VehicleMakeController
-        public async Task<ActionResult> Index(string sortOrder, string searchString)
+        public async Task<ActionResult> Index(string searchString, string sortOrder, int pageNumber = 1)
         {
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewBag.AbrvSortParm = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder=="name_asc" ? "name_desc" : "name_asc";
+            ViewData["AbrvSortParm"] = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
+            ViewData["CurrentFilter"] = searchString;
 
-            var makes = from m in await vehicleService.GetVehiclesAsync()
-                        select m;
+            var makes = await vehicleService.GetVehiclesPageAsync(searchString, pageNumber, sortOrder);
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                makes = makes.Where(m => m.Name.Contains(searchString)
-                                    || m.Abrv.Contains(searchString));
-            }
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    makes = makes.OrderByDescending(m => m.Name);
-                    break;
-                case "name_asc":
-                    makes = makes.OrderBy(m => m.Name);
-                    break;
-                case "abrv_desc":
-                    makes = makes.OrderByDescending(m => m.Abrv);
-                    break;
-                case "abrv_asc":
-                    makes = makes.OrderBy(m => m.Abrv);
-                    break;
-                default:
-                    makes = makes.OrderBy(m => m.Name);
-                    break;
-            }
             return View(makes);
         }
 
@@ -57,7 +35,8 @@ namespace Project.MVC.Controllers
 
             if(make == null)
             {
-                return NotFound();
+                //return RedirectToAction(nameof(NotFound));
+                return View("NotFound");
             }
 
             return View(make);
@@ -97,7 +76,7 @@ namespace Project.MVC.Controllers
 
             if(make == null)
             {
-                return NotFound();
+                return View("NotFound");
             }
 
             var makeViewModel = new VehicleMakeViewModel
@@ -139,7 +118,7 @@ namespace Project.MVC.Controllers
 
             if(make == null)
             {
-                return NotFound();
+                return View("NotFound");
             }
 
             await vehicleService.DeleteVehicleMakeAsync(id);

@@ -17,46 +17,15 @@ namespace Project.MVC.Controllers
         }
 
         // GET: VehicleModelController
-        public async Task<ActionResult> Index(string sortOrder, string searchString)
+        public async Task<ActionResult> Index(string searchString, string sortOrder, int pageNumber = 1)
         {
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewBag.AbrvSortParm = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
-            ViewBag.MakeNameSortParm = sortOrder == "Make" ? "make_desc" : "Make";
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder == "name_asc" ? "name_desc" : "name_asc";
+            ViewData["AbrvSortParm"] = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
+            ViewData["MakeNameSortParm"] = sortOrder == "MakeName" ? "makeName_desc" : "MakeName";
+            ViewData["CurrentFilter"] = searchString;
 
-            var models = from m in await vehicleService.GetVehicleModelsAsync()
-                         select m;
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                models = models.Where(m => m.Name.Contains(searchString)
-                                      || m.Abrv.Contains(searchString)
-                                      || m.MakeName.Contains(searchString));
-            }
-
-            switch (sortOrder)
-            {
-                case ("name_desc"):
-                    models = models.OrderByDescending(m => m.Name);
-                    break;
-                case ("name_asc"):
-                    models = models.OrderBy(m => m.Name);
-                    break;
-                case ("abrv_desc"):
-                    models = models.OrderByDescending(m => m.Abrv);
-                    break;
-                case ("abrv_asc"):
-                    models = models.OrderBy(m => m.Abrv);
-                    break;
-                case ("makeName_desc"):
-                    models = models.OrderByDescending(m => m.MakeName);
-                    break;
-                case ("makeName_asc"):
-                    models = models.OrderBy(m => m.MakeName);
-                    break;
-                default:
-                    models = models.OrderBy(m => m.Name);
-                    break;
-            }
+            var models = await vehicleService.GetVehicleModelsPageAsync(searchString, pageNumber, sortOrder);
 
             return View(models);
         }
@@ -68,8 +37,7 @@ namespace Project.MVC.Controllers
 
             if (model == null)
             {
-                //napraviti view za notfound u shared
-                return NotFound();
+                return View("NotFound");
             }
 
             return View(model);
@@ -116,7 +84,7 @@ namespace Project.MVC.Controllers
 
             if (model == null)
             {
-                return NotFound();
+                return View("NotFound");
             }
 
             var makes = await vehicleService.GetVehiclesAsync();
@@ -156,7 +124,7 @@ namespace Project.MVC.Controllers
 
             if (!success)
             {
-                return NotFound();
+                return View("NotFound");
             }
 
             return RedirectToAction(nameof(Index));

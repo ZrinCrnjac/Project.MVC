@@ -1,4 +1,5 @@
-﻿using Project.Service.Database.Models;
+﻿using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
+using Project.Service.Database.Models;
 using Project.Service.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Project.Service.Services
 {
     public interface IVehicleService
     {
+        Task<PageResult<VehicleMakeViewModel>> GetVehiclesPageAsync(string searchString, int pageNumber, string sortOrder);
         Task<List<VehicleMakeViewModel>> GetVehiclesAsync();
         Task<VehicleMakeViewModel> GetVehicleMakeByIdAsync(int id);
         Task CreateVehicleMakeAsync(VehicleMakeCreateViewModel vehicleCreateMakeViewModel);
@@ -20,5 +22,6 @@ namespace Project.Service.Services
         Task<int> CreateVehicleModelAsync(VehicleModelCreateViewModel vehicleModelCreateViewModel);
         Task<bool> DeleteVehicleModelAsync(int id);
         Task<int> UpdateVehicleModelAsync(VehicleModelCreateViewModel vehicleModelCreateViewModel);
+        Task<PageResult<VehicleModelViewModel>> GetVehicleModelsPageAsync(string searchString, int pageNumber, string sortOrder);
     }
 }

@@ -29,6 +29,44 @@ namespace Project.Service.Services
             return vehicleMakeViewModels;
         }
 
+        public async Task<PageResult<VehicleMakeViewModel>> GetVehiclesPageAsync(string searchString, int pageNumber, string sortOrder)
+        {
+
+            var makes = this.context.VehicleMakes.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                searchString = searchString.ToLower();
+                makes = makes.Where(m => m.Name.ToLower().Contains(searchString) || m.Abrv.ToLower().Contains(searchString));
+                pageNumber = 1;
+            }
+
+            var pageSize = 10;
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    makes = makes.OrderByDescending(m => m.Name);
+                    break;
+                case "name_asc":
+                    makes = makes.OrderBy(m => m.Name);
+                    break;
+                case "abrv_desc":
+                    makes = makes.OrderByDescending(m => m.Abrv);
+                    break;
+            }
+
+            var totalCount = await makes.CountAsync();
+
+            var items = await makes.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToListAsync();
+
+            var vehicleMakeViewModels = this.mapper.Map<List<VehicleMakeViewModel>>(items);
+
+            var page = new PageResult<VehicleMakeViewModel>(vehicleMakeViewModels, totalCount, pageNumber, pageSize);
+
+            return page;
+        }
+
         public async Task CreateVehicleMakeAsync(VehicleMakeCreateViewModel vehicleMakeCreateViewModel)
         {
             var vehicleMake = this.mapper.Map<VehicleMake>(vehicleMakeCreateViewModel);
@@ -99,6 +137,46 @@ namespace Project.Service.Services
             this.context.VehicleModels.Update(vehicleModel);
             await this.context.SaveChangesAsync();
             return vehicleModel.Id;
+        }
+
+        public async Task<PageResult<VehicleModelViewModel>> GetVehicleModelsPageAsync(string searchString, int pageNumber, string sortOrder)
+        {
+            var models = this.context.VehicleModels.Include(v => v.VehicleMake).AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                searchString = searchString.ToLower();
+                models = models.Where(m => m.Name.ToLower().Contains(searchString) || m.VehicleMake.Name.ToLower().Contains(searchString));
+                pageNumber = 1;
+            }
+
+            var pageSize = 10;
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    models = models.OrderByDescending(m => m.Name);
+                    break;
+                case "name_asc":
+                    models = models.OrderBy(m => m.Name);
+                    break;
+                case "abrv_desc":
+                    models = models.OrderByDescending(m => m.VehicleMake.Name);
+                    break;
+                case "makeName_desc":
+                    models = models.OrderByDescending(m => m.VehicleMake.Name);
+                    break;
+            }
+
+            var totalCount = await models.CountAsync();
+
+            var items = await models.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToListAsync();
+
+            var vehicleModelViewModels = this.mapper.Map<List<VehicleModelViewModel>>(items);
+
+            var page = new PageResult<VehicleModelViewModel>(vehicleModelViewModels, totalCount, pageNumber, pageSize);
+
+            return page;
         }
     }
 }
