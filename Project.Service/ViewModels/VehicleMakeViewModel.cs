@@ -10,5 +10,6 @@ namespace Project.Service.ViewModels
         public required string Name { get; set; }
 
         public required string Abrv { get; set; }
+        public List<VehicleModelViewModel> Models { get; set; }
     }
 }

@@ -22,3 +22,22 @@
         </dd>
     </dl>
 </div>
+
+<br />
+
+@* print out all the VehicleModels *@
+
+@if (Model.Models != null && Model.Models.Any())
+{
+    <h2>Associated Vehicle Models</h2>
+    <ul>
+        @foreach (var vehicleModel in Model.Models)
+        {
+            <li>@vehicleModel.Name</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No associated Vehicle Models found.</p>
+}

@@ -14,6 +14,7 @@ namespace Project.Service.Services
         Task<PageResult<VehicleMakeViewModel>> GetVehiclesPageAsync(string searchString, int pageNumber, string sortOrder);
         Task<List<VehicleMakeViewModel>> GetVehiclesAsync();
         Task<VehicleMakeViewModel> GetVehicleMakeByIdAsync(int id);
+        Task<VehicleMakeViewModel> GetVehicleMakeWithModelsAsync(int id);
         Task CreateVehicleMakeAsync(VehicleMakeCreateViewModel vehicleCreateMakeViewModel);
         Task UpdateVehicleMakeAsync(VehicleMakeViewModel vehicleMakeViewModel);
         Task DeleteVehicleMakeAsync(int id);

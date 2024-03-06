@@ -29,13 +29,17 @@ namespace Project.MVC.Controllers
         }
 
         // GET: VehicleMakeController/Details/5
-        public async Task<ActionResult> Details(int id)
+        public async Task<ActionResult> Details(int? id)
         {
-            var make = await vehicleService.GetVehicleMakeByIdAsync(id);
+            if(id == null)
+            {
+                return View("NotFound");
+            }
+
+            var make = await vehicleService.GetVehicleMakeWithModelsAsync(id.Value);
 
             if(make == null)
             {
-                //return RedirectToAction(nameof(NotFound));
                 return View("NotFound");
             }
 

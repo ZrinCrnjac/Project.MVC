@@ -81,6 +81,19 @@ namespace Project.Service.Services
             return vehicleMakeViewModel;
         }
 
+        public async Task<VehicleMakeViewModel> GetVehicleMakeWithModelsAsync(int id)
+        {
+            var vehicleMake = await this.context.VehicleMakes.Include(v => v.Models).FirstOrDefaultAsync(v => v.Id == id);
+
+            if (vehicleMake == null)
+            {
+                return null;
+            }
+
+            var vehicleMakeViewModel = this.mapper.Map<VehicleMakeViewModel>(vehicleMake);
+            return vehicleMakeViewModel;
+        }
+
         public async Task UpdateVehicleMakeAsync(VehicleMakeViewModel vehicleMakeViewModel)
         {
             var vehicleMake = this.mapper.Map<VehicleMake>(vehicleMakeViewModel);
