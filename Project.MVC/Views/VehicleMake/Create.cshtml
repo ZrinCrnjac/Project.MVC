@@ -4,13 +4,15 @@
     ViewData["Title"] = "Create";
 }
 
+<head>
+    <link href="~/css/index.css" rel="stylesheet" />
+</head>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>VehicleMakeViewModel</h4>
-        <hr />
         @Html.ValidationSummary(true,"", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
@@ -31,7 +33,7 @@
         </div>
 
         <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-default" />
+            <input id="submitButton" type="submit" value="Create" class="btn btn-default" disabled/>
         </div>
     </div>
 }
@@ -39,3 +41,7 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+@section Scripts{
+    <script src="~/js/site.js"></script>
+}

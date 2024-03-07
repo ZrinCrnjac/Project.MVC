@@ -97,9 +97,9 @@ namespace Project.Service.Services
             return vehicleMakeViewModel;
         }
 
-        public async Task UpdateVehicleMakeAsync(VehicleMakeViewModel vehicleMakeViewModel)
+        public async Task UpdateVehicleMakeAsync(VehicleMakeCreateViewModel vehicleMakeCreateViewModel)
         {
-            var vehicleMake = this.mapper.Map<VehicleMake>(vehicleMakeViewModel);
+            var vehicleMake = this.mapper.Map<VehicleMake>(vehicleMakeCreateViewModel);
             this.context.VehicleMakes.Update(vehicleMake);
             await this.context.SaveChangesAsync();
         }

@@ -83,7 +83,7 @@ namespace Project.MVC.Controllers
                 return View("NotFound");
             }
 
-            var makeViewModel = new VehicleMakeViewModel
+            var makeViewModel = new VehicleMakeCreateViewModel
             {
                 Id = make.Id,
                 Name = make.Name,
@@ -96,23 +96,23 @@ namespace Project.MVC.Controllers
         // POST: VehicleMakeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(VehicleMakeViewModel vehicleMakeViewModel)
+        public async Task<ActionResult> Edit(VehicleMakeCreateViewModel vehicleMakeCreateViewModel)
         {
             if(ModelState.IsValid)
             {
-                return View(vehicleMakeViewModel);
+                return View(vehicleMakeCreateViewModel);
             }
 
-            var make = new VehicleMakeViewModel
+            var make = new VehicleMakeCreateViewModel
             {
-                Id = vehicleMakeViewModel.Id,
-                Name = vehicleMakeViewModel.Name,
-                Abrv = vehicleMakeViewModel.Abrv
+                Id = vehicleMakeCreateViewModel.Id,
+                Name = vehicleMakeCreateViewModel.Name,
+                Abrv = vehicleMakeCreateViewModel.Abrv
             };
 
             await vehicleService.UpdateVehicleMakeAsync(make);
 
-            return RedirectToAction(nameof(Details), new { id = vehicleMakeViewModel.Id });
+            return RedirectToAction(nameof(Details), new { id = vehicleMakeCreateViewModel.Id });
         }
 
         // GET: VehicleMakeController/Delete/5
