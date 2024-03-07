@@ -18,7 +18,7 @@
     <div class="form-actions no-color">
         <p>
             Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
+            <input type="submit" value="Search" class="btn btn-default" />
             @if ((string)ViewData["CurrentFilter"] != null)
             {
                 <a asp-action="Index">Back to Full List</a>

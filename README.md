@@ -4,7 +4,8 @@
 
 To run the project, you need to have installed the following software:
 
-- [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/))
+- [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/)
+- [SQL Server Management Studio](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16)
 
 1. Clone the repository
 
@@ -12,10 +13,9 @@ To run the project, you need to have installed the following software:
 git clone https://github.com/ZrinCrnjac/ProjectMVC.git
 ```
 
-2. Open the solution file `BackendDeveloper.sln` with Visual Studio 2022
-3. Run the project			
-4. Run update-database in the Package Manager Console to create and seed the database		
-5. Run the application
+2. Open the solution file `BackendDeveloper.sln` with Visual Studio 2022		
+3. Run update-database in the Package Manager Console to create and seed the database		
+4. Run the application
 
 ### Usage
 
