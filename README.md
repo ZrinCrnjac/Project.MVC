@@ -1,9 +1,5 @@
 # Task for the position of Backend Developer
 
-### Table of Contents
-
-1. [Task](#task)
-
 ### Installation
 
 To run the project, you need to have installed the following software:
