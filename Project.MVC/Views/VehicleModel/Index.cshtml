@@ -4,6 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
+<head>
+    <link href="~/css/index.css" rel="stylesheet" />
+</head>
+
 <h1>Index</h1>
 
 <p>
@@ -25,7 +29,7 @@
         <tr>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-pageNumber="@(Model.PageIndex)">Name</a>
-                @if ((string)ViewData["CurrentSort"] == "name_asc")
+                @if ((string)ViewData["CurrentSort"] == "name_asc" || (string)ViewData["CurrentSort"] == null)
                 {
                     <span>&#9650;</span>
                 }
@@ -36,7 +40,7 @@
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["AbrvSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-pageNumber="@(Model.PageIndex)">Abrv</a>
-                @if ((string)ViewData["CurrentSort"] == "Abrv" || (string)ViewData["CurrentSort"] == null)
+                @if ((string)ViewData["CurrentSort"] == "Abrv")
                 {
                     <span>&#9650;</span>
                 }
