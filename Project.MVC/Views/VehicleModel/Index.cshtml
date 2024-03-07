@@ -25,12 +25,36 @@
         <tr>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-pageNumber="@(Model.PageIndex)">Name</a>
+                @if ((string)ViewData["CurrentSort"] == "name_asc")
+                {
+                    <span>&#9650;</span>
+                }
+                else if ((string)ViewData["CurrentSort"] == "name_desc")
+                {
+                    <span>&#9660;</span>
+                }
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["AbrvSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-pageNumber="@(Model.PageIndex)">Abrv</a>
+                @if ((string)ViewData["CurrentSort"] == "Abrv" || (string)ViewData["CurrentSort"] == null)
+                {
+                    <span>&#9650;</span>
+                }
+                else if ((string)ViewData["CurrentSort"] == "abrv_desc")
+                {
+                    <span>&#9660;</span>
+                }
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["MakeNameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-pageNumber="@(Model.PageIndex)">Make</a>
+                @if ((string)ViewData["CurrentSort"] == "MakeName")
+                {
+                    <span>&#9650;</span>
+                }
+                else if ((string)ViewData["CurrentSort"] == "makeName_desc")
+                {
+                    <span>&#9660;</span>
+                }
             </th>
             <th>
                 Actions

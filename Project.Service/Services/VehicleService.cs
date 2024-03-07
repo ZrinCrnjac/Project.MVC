@@ -54,6 +54,9 @@ namespace Project.Service.Services
                 case "abrv_desc":
                     makes = makes.OrderByDescending(m => m.Abrv);
                     break;
+                default:
+                    makes = makes.OrderBy(m => m.Name);
+                    break;
             }
 
             var totalCount = await makes.CountAsync();
@@ -178,6 +181,9 @@ namespace Project.Service.Services
                     break;
                 case "makeName_desc":
                     models = models.OrderByDescending(m => m.VehicleMake.Name);
+                    break;
+                default:
+                    models = models.OrderBy(m => m.Name);
                     break;
             }
 

@@ -98,7 +98,7 @@ namespace Project.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(VehicleMakeViewModel vehicleMakeViewModel)
         {
-            if(!ModelState.IsValid)
+            if(ModelState.IsValid)
             {
                 return View(vehicleMakeViewModel);
             }
@@ -112,7 +112,7 @@ namespace Project.MVC.Controllers
 
             await vehicleService.UpdateVehicleMakeAsync(make);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), new { id = vehicleMakeViewModel.Id });
         }
 
         // GET: VehicleMakeController/Delete/5
