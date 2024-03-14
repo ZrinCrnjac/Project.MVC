@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Project.Service.Database.Models;
-using Project.Service.ViewModels;
+using Project.MVC.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Service.AutoMapper
+namespace Project.MVC.AutoMapper
 {
     public class MappingProfile : Profile
     {

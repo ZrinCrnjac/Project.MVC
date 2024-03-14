@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Project.MVC.ViewModels;
 using Project.Service.Database.Models;
 using Project.Service.Services;
 using Project.Service.ViewModels;
@@ -9,44 +11,59 @@ namespace Project.MVC.Controllers
 {
     public class VehicleModelController : Controller
     {
-        private readonly IVehicleService vehicleService;
+        private readonly IVehicleModelService vehicleModelService;
+        private readonly IVehicleMakeService vehicleMakeService;
+        private readonly IMapper mapper;
 
-        public VehicleModelController(IVehicleService vehicleService)
+        public VehicleModelController(IVehicleModelService vehicleService, IVehicleMakeService vehicleMakeService, IMapper mapper)
         {
-            this.vehicleService = vehicleService;
+            this.vehicleModelService = vehicleService;
+            this.vehicleMakeService = vehicleMakeService;
+            this.mapper = mapper;
         }
 
         // GET: VehicleModelController
-        public async Task<ActionResult> Index(string searchString, string sortOrder, int pageNumber = 1)
+        public async Task<ActionResult> Index(FilterSortPageOptions filterSortPageOptions)
         {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder == "name_asc" ? "name_desc" : "name_asc";
-            ViewData["AbrvSortParm"] = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
-            ViewData["MakeNameSortParm"] = sortOrder == "MakeName" ? "makeName_desc" : "MakeName";
-            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentSort"] = filterSortPageOptions.SortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(filterSortPageOptions.SortOrder) || filterSortPageOptions.SortOrder == "name_asc" ? "name_desc" : "name_asc";
+            ViewData["AbrvSortParm"] = filterSortPageOptions.SortOrder == "Abrv" ? "abrv_desc" : "Abrv";
+            ViewData["MakeNameSortParm"] = filterSortPageOptions.SortOrder == "MakeName" ? "makeName_desc" : "MakeName";
+            ViewData["CurrentFilter"] = filterSortPageOptions.SearchString;
 
-            var models = await vehicleService.GetVehicleModelsPageAsync(searchString, pageNumber, sortOrder);
+            var models = await vehicleModelService.GetVehicleModelsPageAsync(filterSortPageOptions);
 
-            return View(models);
+            var items = this.mapper.Map<List<VehicleModelViewModel>>(models.Items);
+
+            var page = new PageResult<VehicleModelViewModel>(items, models.Count, models.PageIndex, filterSortPageOptions.PageSize);
+
+            return View(page);
         }
 
         // GET: VehicleModelController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var model = await vehicleService.GetVehicleModelByIdAsync(id);
-
-            if (model == null)
+            if (id == null)
             {
                 return View("NotFound");
             }
 
-            return View(model);
+            var model = await vehicleModelService.GetVehicleModelByIdAsync(id);
+
+            if(model == null)
+            {
+                return View("NotFound");
+            }
+
+            var modelViewModel = this.mapper.Map<VehicleModelViewModel>(model);
+
+            return View(modelViewModel);
         }
 
         // GET: VehicleModelController/Create
         public async Task<ActionResult> Create()
         {
-            var makes = await vehicleService.GetVehiclesAsync();
+            var makes = await vehicleMakeService.GetVehiclesAsync();
 
             var makeList = new SelectList(makes, "Id", "Name");
 
@@ -60,10 +77,9 @@ namespace Project.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(VehicleModelCreateViewModel vehicleModelCreateViewModel)
         {
-
             if (!ModelState.IsValid)
             {
-                var makes = await vehicleService.GetVehiclesAsync();
+                var makes = await vehicleMakeService.GetVehiclesAsync();
 
                 var makeList = new SelectList(makes, "Id", "Name");
 
@@ -72,7 +88,9 @@ namespace Project.MVC.Controllers
                 return View(vehicleModelCreateViewModel);
             }
 
-            var modelId = await vehicleService.CreateVehicleModelAsync(vehicleModelCreateViewModel);
+            var model = this.mapper.Map<VehicleModel>(vehicleModelCreateViewModel);
+
+            var modelId = await vehicleModelService.CreateVehicleModelAsync(model);
 
             return RedirectToAction(nameof(Details), new { id = modelId });
         }
@@ -80,20 +98,22 @@ namespace Project.MVC.Controllers
         // GET: VehicleModelController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var model = await vehicleService.GetVehicleModelByIdAsync(id);
+            var model = await vehicleModelService.GetVehicleModelByIdAsync(id);
 
             if (model == null)
             {
                 return View("NotFound");
             }
 
-            var makes = await vehicleService.GetVehiclesAsync();
+            var modelViewModel = this.mapper.Map<VehicleModelCreateViewModel>(model);
+
+            var makes = await vehicleMakeService.GetVehiclesAsync();
 
             var makeList = new SelectList(makes, "Id", "Name");
 
             ViewBag.MakeList = makeList;
 
-            return View(model);
+            return View(modelViewModel);
         }
 
         // POST: VehicleModelController/Edit/5
@@ -103,7 +123,7 @@ namespace Project.MVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var makes = await vehicleService.GetVehiclesAsync();
+                var makes = await vehicleMakeService.GetVehiclesAsync();
 
                 var makeList = new SelectList(makes, "Id", "Name");
 
@@ -112,7 +132,9 @@ namespace Project.MVC.Controllers
                 return View(vehicleModelCreateViewModel);
             }
 
-            var modelId = await vehicleService.UpdateVehicleModelAsync(vehicleModelCreateViewModel);
+            var model = this.mapper.Map<VehicleModel>(vehicleModelCreateViewModel);
+
+            var modelId = await vehicleModelService.UpdateVehicleModelAsync(model);
 
             return RedirectToAction(nameof(Details), new { id = vehicleModelCreateViewModel.Id });
         }
@@ -120,7 +142,7 @@ namespace Project.MVC.Controllers
         // GET: VehicleModelController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            var success = await vehicleService.DeleteVehicleModelAsync(id);
+            var success = await vehicleModelService.DeleteVehicleModelAsync(id);
 
             if (!success)
             {

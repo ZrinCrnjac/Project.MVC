@@ -4,7 +4,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Database;
 using Project.Service.Services;
-using Project.Service.AutoMapper;
+using Project.MVC.AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +17,8 @@ builder.Host
         var contextOptionsBuilder = new DbContextOptionsBuilder<VehicleDatabase>();
         contextOptionsBuilder.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings:DefaultConnection").Value);
         container.RegisterType<VehicleDatabase>().WithParameter("options",contextOptionsBuilder.Options).AsSelf().InstancePerLifetimeScope();
-        container.RegisterType<VehicleService>().As<IVehicleService>().InstancePerLifetimeScope();
+        container.RegisterType<VehicleMakeService>().As<IVehicleMakeService>().InstancePerLifetimeScope();
+        container.RegisterType<VehicleModelService>().As<IVehicleModelService>().InstancePerLifetimeScope();
     });
 
 // Add services to the container.

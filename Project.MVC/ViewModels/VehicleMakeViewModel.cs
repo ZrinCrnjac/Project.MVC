@@ -1,7 +1,7 @@
 ﻿using Project.Service.Database.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace Project.Service.ViewModels
+namespace Project.MVC.ViewModels
 {
     public class VehicleMakeViewModel
     {

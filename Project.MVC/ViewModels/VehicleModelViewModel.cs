@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Service.ViewModels
+namespace Project.MVC.ViewModels
 {
     public class VehicleModelViewModel
     {
